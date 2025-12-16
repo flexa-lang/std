@@ -28,6 +28,8 @@ struct Dictionary {
 	var size: int;
 }
 
+fun stringfy(dict: Dictionary): string;
+
 fun create_dictionary(): Dictionary {
 	return Dictionary{root=null, size=0};
 }
@@ -36,7 +38,7 @@ fun emplace(dict: Dictionary, key: any, value: any) {
 	var str_key = string(key);
 	var h = hash(str_key);
 
-	var new_node = DictionaryNode{key=key, key_hash=h, value=value, left=null, right=null};
+	var new_node = DictionaryNode{key=key, key_hash=h, value=ref value, left=null, right=null};
 
 	if (dict.root == null) {
 		dict.root = new_node;
@@ -61,7 +63,7 @@ fun emplace(dict: Dictionary, key: any, value: any) {
 			if (key == current.key) {
 				current.key = new_node.key;
 				current.key_hash = new_node.key_hash;
-				current.value = new_node.value;
+				current.value = ref new_node.value;
 				break;
 			} else {
 				throw "Unhandled collision";
@@ -89,7 +91,7 @@ fun erase(dict: Dictionary, key: any) {
 	var side = MIDDLE;
 
 	while (current != null) {
-		if (key == current.key) {
+		if (unref key == unref current.key) {
 			break;
 		}
 
@@ -134,7 +136,7 @@ fun erase(dict: Dictionary, key: any) {
 
 		current.key = successor.key;
 		current.key_hash = successor.key_hash;
-		current.value = successor.value;
+		current.value = ref successor.value;
 
 		if (successor_parent.left == successor) {
 			successor_parent.left = successor.right;
@@ -156,8 +158,8 @@ fun find(dict: Dictionary, key: any): any {
 	var current = dict.root;
 
 	while (current != null) {
-		if (key == current.key) {
-			return current.value;
+		if (unref key == unref current.key) {
+			return ref current.value;
 		}
 		if (h > current.key_hash) {
 			current = current.right;
@@ -195,7 +197,7 @@ fun to_array(dict: Dictionary): any[] {
 	var current = dict.root;
 
 	while (current != null) {
-		var current_pair = Pair{key=current.key, value=current.value};
+		var current_pair = Pair{key=current.key, value=ref current.value};
 		var current_left_pair = null;
 		var current_right_pair = null;
 		if (current.left != null) {
@@ -230,7 +232,7 @@ fun parse_struct(str: any): Dictionary {
 	var dict = create_dictionary();
 
 	foreach (var [key, value] in str) {
-		emplace(dict, key, is_struct(value) ? parse_struct(value) : value);
+		emplace(dict, key, is_struct(ref value) ? parse_struct(ref value) : value);
 	}
 	
 	return dict;
@@ -240,7 +242,7 @@ fun copy(dict: Dictionary): Dictionary {
 	var copyd = create_dictionary();
 	var arr = to_array(dict);
 	foreach (var v in arr) {
-		emplace(copyd, v.key, v.value);
+		emplace(copyd, v.key, ref v.value);
 	}
 	return copyd;
 }

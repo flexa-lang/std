@@ -6,17 +6,8 @@ namespace flx;
 
 using flx.std.collections.dictionary;
 
-
 fun _json_stringify_value(value: any): string;
 fun json_stringify(dict: Dictionary): string;
-
-fun rstr(str: string, count: int): string {
-	var res = "";
-	for (var i = 0; i < count; i++) {
-		res += str;
-	}
-	return res;
-}
 
 fun _json_stringify_value(value: any): string {
 	var json: string = "";
@@ -73,6 +64,6 @@ fun json_stringify(dict: Dictionary): string {
 	}
 
 	json += "}";
-	
+
 	return json;
 }
