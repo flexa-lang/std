@@ -4,6 +4,8 @@
 
 namespace flx;
 
+using flx.core.os;
+
 const PATH_SEPARATOR = "/";
 
 const MODE_READ: int = 1;
@@ -33,3 +35,18 @@ fun list_dir(path: string): string[];
 
 fun path_exists(path: string): bool;
 fun delete_path(path: string);
+
+fun get_cwd(): string { 
+	return os.cwd; 
+}
+
+fun join_path(...parts: string): string {
+	var full_path = "";
+	for (var i = 0; i < len(parts); i++) {
+		if (i > 0) {
+			full_path += PATH_SEPARATOR;
+		}
+		full_path += parts[i];
+	}
+	return full_path;
+}
