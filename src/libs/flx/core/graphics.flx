@@ -98,3 +98,9 @@ fun draw_image(window: Window, image: Image, x: int, y: int);
 fun update(window: Window);
 fun destroy_window(window: Window);
 fun is_quit(window: Window): bool;
+
+fun is_key_down(window: Window, key: int): bool;
+fun is_mouse_down(window: Window, button: int): bool;
+fun mouse_x(window: Window): int;
+fun mouse_y(window: Window): int;
+fun mouse_wheel(window: Window): int;
